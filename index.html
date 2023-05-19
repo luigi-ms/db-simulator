@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LocalStorage CRUD</title>
+    <link rel="stylesheet" href="./styles.css">
+  </head>
+
+  <body>
+    <main id="db-simulator">
+      <h1>Simulador de DB</h1>
+      <div class="entryForm"> 
+        <label>ID
+          <input 
+            v-model="entryForm.id" 
+            type="number" 
+            id="IDInput" 
+            placeholder="00">
+        </label>
+    
+        <label>Column
+          <input 
+            v-model="entryForm.column" 
+            type="text" 
+            id="columnInput" 
+            placeholder="name">
+        </label>
+       
+        <label>Data
+          <input 
+            v-model="entryForm.data"
+            type="text" 
+            id="dataInput" 
+            placeholder="admin">
+        </label>
+   
+        <fieldset class="buttons">
+          <button @click="addData" class="add-btn">Adicionar</button>
+          <button @click="updateData" class="update-btn">Atualizar</button>
+          <button @click="removeData" class="del-btn">Remover</button>
+        </fieldset>
+      </div>
+
+      <hr/>
+      
+      <table>
+        <tr>
+          <th>ID</th>
+          <th>NAME</th>
+          <th>AGE</th>
+        </tr>
+        <tr v-for="(entry, k) in records" :key="entry.id">
+          <td>{{ entry.id }}</td>
+          <td>{{ entry.name }}</td>
+          <td>{{ entry.age }}</td>
+        </tr>
+      </table>
+    </main>
+
+    <script src="//cdn.jsdelivr.net/npm/eruda"></script>
+    <script>eruda.init();</script>
+    <script type="module" src="./script.js"></script>
+  </body>
+</html>
