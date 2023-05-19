@@ -1,9 +1,14 @@
 export class Record {
-  constructor(id, name, age){
-    this.id = id;
-    this.name = name;
-    this.age = age;
+  constructor(id){
+    this._id = id;
+    this.name = '';
+    this.age = 0;
+    this.updated = '';
   }
+
+  getUpdatedCol(){ return this.updated; }
+
+  get id(){ return this._id; }
 }
 
 export class RecordsList {
@@ -11,7 +16,7 @@ export class RecordsList {
     this._recs = [];
   }
 
-  add(rec){ 
+  addRecord(rec){ 
     if(rec instanceof Record){
       this.list.push(rec);
     }else{
@@ -19,23 +24,27 @@ export class RecordsList {
     }
   }
 
-  getRecord(foo){
-    if(foo instanceof Record){
-      return this.list.filter(rec => rec === foo)[0];
+  getRecord(recordID){
+    const result = this.list.filter(rec => rec.id === recordID)[0];
+
+    if(result){
+      return result;
     }else{
-      throw new Error('Not a Record instance');
+      throw new Error("Record does not exist");
     }
   }
 
-  getRecordIndex(foo){
-    if(foo instanceof Record){
-      return this.list.getIndex(foo);
+  getRecordIndex(recordID){
+    const index = this.list.findIndex(rec => rec.id === recordID);
+
+    if(index >= 0){
+      return index;
     }else{
-      throw new Error('Not a Record instance');
+      throw new Error("Record index does not exist");
     }
   }
 
-  update(oldRecIndex, newRec){
+  updateRecord(oldRecIndex, newRec){
     if(newRec instanceof Record){
       this.list.splice(oldRecIndex, 1, newRec);
     }else{ 

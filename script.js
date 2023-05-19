@@ -9,20 +9,42 @@ createApp({
         column: '',
         data: ''
       },
-      workingRecord: new Record(0, '', ''),
+      columns: ['id', 'name', 'age'],
+      workingRecord: new Record(0),
       records: new RecordsList()
     };
   },
+  updated(){
+    this.workingRecord = new Record(0);
+  },
   methods: {
     addData(){
-      this.records.add(this.mountWorkingRecord());
+      try{
+        const validatedID = this.validateID(this.entryForm.id);
+        const newRecord = new Record(validatedID);
+        const mounted = this.mountWorkingRecord();
+
+        newRecord.name = mounted.name;
+        newRecord.age = mounted.age;
+
+        this.records.addRecord(newRecord);
+      }catch(err){
+        alert(err.message);
+      }
     },
     updateData(){
-      const workingRecord = this.mountWorkingRecord();
       try{
-        if(this.records.idExists(workingRecord.id)){
-          const oldRecordIndex = this.records.getRecordIndex(workingRecord);
-          this.records.update(oldRecordIndex, workingRecord);
+        if(this.records.idExists(this.entryForm.id)){
+          const updatedRecord = new Record(this.entryForm.id);
+          const mounted = this.mountWorkingRecord();
+
+          updatedRecord.name = mounted.name;
+          updatedRecord.age = mounted.age;
+
+          const oldRecordIndex = this.records.getRecordIndex(updatedRecord.id);
+          this.records.updateRecord(oldRecordIndex, updatedRecord);
+        }else { 
+          throw new Error(`ID '${this.entryForm.id}' does not exist`);
         }
       }catch(err){
         alert('Cannot update because '+err.message);
@@ -30,34 +52,29 @@ createApp({
     },
     mountWorkingRecord(){
       try{
-        const col = this.validateColumn(this.entryForm.column);
+        const colName = this.validateColumn(this.entryForm.column);
+ 
+        this.workingRecord.updated = colName;
+        this.workingRecord[colName] = this.entryForm.data;
 
-        this.workingRecord.id = this.validateID(this.entryForm.id);
-
-        if(col === 'name'){
-          this.workingRecord.name = this.entryForm.data;
-        }else if(col === 'age'){
-          this.workingRecord.age = this.entryForm.data;
-        }
-
+        console.log(this.workingRecord);
         return this.workingRecord;
       }catch(err){
-        alert("Cannot add because "+err.message);
+        alert("Cannot mount record because "+err.message);
       }
     },
     validateColumn(column){
-      if(['name', 'age'].some(col => col === column)){
+      if(this.columns.some(col => col === column)){
         return column;
       }else{
         throw new Error(`column '${column}' does not exist`);
       }
-    }
-    ,
+    },
     validateID(id){
-      if(!this.records.idExists(id)){ 
-        return id;
-      }else{
+      if(this.records.idExists(id)){ 
         throw new Error(`ID '${id}' already exists`);
+      }else{
+        return id;
       };
     }
   }

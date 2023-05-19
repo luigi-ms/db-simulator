@@ -46,12 +46,12 @@
       
       <table>
         <tr>
-          <th>ID</th>
-          <th>NAME</th>
-          <th>AGE</th>
+          <th v-for="(colName, index) in columns" :key="index">
+            {{ colName }}
+          </th>
         </tr>
-        <tr v-for="(entry, k) in records.list" :key="entry.id">
-          <td>{{ entry.id }}</td>
+        <tr v-for="entry in records.list" :key="entry.id">
+          <td class="recordID">{{ entry.id }}</td>
           <td>{{ entry.name }}</td>
           <td>{{ entry.age }}</td>
         </tr>
