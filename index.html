@@ -50,7 +50,7 @@
           <th>NAME</th>
           <th>AGE</th>
         </tr>
-        <tr v-for="(entry, k) in records" :key="entry.id">
+        <tr v-for="(entry, k) in records.list" :key="entry.id">
           <td>{{ entry.id }}</td>
           <td>{{ entry.name }}</td>
           <td>{{ entry.age }}</td>

@@ -1,4 +1,5 @@
 import { createApp } from "https://cdn.jsdelivr.net/npm/vue@3.3.4/dist/vue.esm-browser.prod.js";
+import { Record, RecordsList } from "./classes.js";
 
 createApp({
   data(){
@@ -8,22 +9,25 @@ createApp({
         column: '',
         data: ''
       },
-      workingRecord: {
-        id: 0,
-        name: '',
-        age: 0
-      },
-      records: []
+      workingRecord: new Record(0, '', ''),
+      records: new RecordsList()
     };
   },
   methods: {
     addData(){
-      this.records.push(this.mountWorkingRecord());
+      this.records.add(this.mountWorkingRecord());
     },
     updateData(){
-      //mount working record and update record in records array
+      const workingRecord = this.mountWorkingRecord();
+      try{
+        if(this.records.idExists(workingRecord.id)){
+          const oldRecordIndex = this.records.getRecordIndex(workingRecord);
+          this.records.update(oldRecordIndex, workingRecord);
+        }
+      }catch(err){
+        alert('Cannot update because '+err.message);
+      }
     },
-    removeData(){},
     mountWorkingRecord(){
       try{
         const col = this.validateColumn(this.entryForm.column);
@@ -50,7 +54,7 @@ createApp({
     }
     ,
     validateID(id){
-      if(!this.records.some(rec => rec.id === id)){
+      if(!this.records.idExists(id)){ 
         return id;
       }else{
         throw new Error(`ID '${id}' already exists`);
