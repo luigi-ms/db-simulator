@@ -9,14 +9,12 @@ createApp({
         column: '',
         data: ''
       },
-      columns: ['id', 'name', 'age'],
+      columns: Record.getColumns(),
       workingRecord: new Record(0),
       records: new RecordsList()
     };
   },
-  updated(){
-    this.workingRecord = new Record(0);
-  },
+  updated(){ this.workingRecord = new Record(0); },
   methods: {
     addData(){
       try{
@@ -49,6 +47,21 @@ createApp({
         }
       }catch(err){
         alert('Cannot update because '+err.message);
+      }
+    },
+    removeData(){
+      try{
+        if(this.records.idExists(this.entryForm.id)){
+          const foundRecord = this.records.getRecord(this.entryForm.id);
+          const recIndex = this.records.getRecordIndex(foundRecord.id);
+
+          this.records.deleteRecord(recIndex);
+          alert(`Record removed`);
+        }else{
+          throw new Error(`ID '${this.entryForm.id}' does not exist`);
+        }
+      }catch(err){
+        alert('Cannot remove because '+err.message);
       }
     },
     mountWorkingRecord(){

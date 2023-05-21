@@ -8,6 +8,8 @@ export class Record {
 
   getUpdatedCol(){ return this.updated; }
 
+  static getColumns(){ return ['id', 'name', 'age']; }
+
   getEmptyCol(){
     if(this.name === ''){
       return 'name';
@@ -56,6 +58,10 @@ export class RecordsList {
     }else{ 
       throw new Error('Not a Record instance');
     }
+  }
+
+  deleteRecord(recordIndex){
+    this.list.splice(recordIndex, 1);
   }
 
   idExists(id){ return this.list.some(rec => rec.id === id); }

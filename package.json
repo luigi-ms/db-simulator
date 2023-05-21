@@ -1,7 +1,9 @@
 {
   "name": "local-crud",
+  "description": "Visual representation of DB operations",
   "version": "1.0.0",
   "main": "index.html",
+  "author": "Luigi Moraes",
   "license": "MIT",
-  "dependencies": {}
+  "repository": "https://github.com/luigi-ms/db-simulator"
 }
