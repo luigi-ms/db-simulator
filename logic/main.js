@@ -24,7 +24,6 @@ createApp({
     addData(){
       try{
         const validatedID = this.validateID(true);
-        console.error(validatedID);
         const newRecord = new Record(validatedID);
         const mounted = this.mountWorkingRecord();
 
@@ -39,7 +38,7 @@ createApp({
     updateData(){
       try{
         const validatedID = this.validateID();
-        const foundRecord = this.records.getRecordByID(validatedID);
+        const foundRecord = this.records.getRecord(validatedID);
         const mounted = this.mountWorkingRecord();
         const emptyCol = mounted.getEmptyCol();
 
@@ -65,12 +64,11 @@ createApp({
     },
     removeData(){
       try{
-        const validatedID = this.validatedID();
-        const foundRecord = this.records.getRecordByID(validatedID);
+        const validatedID = this.validateID();
+        const foundRecord = this.records.getRecord(validatedID);
         const recIndex = this.records.getRecordIndex(foundRecord.id);
 
         this.records.deleteRecord(recIndex);
-        alert(`Record removed`);
       }catch(err){
         alert('Cannot remove because '+err.message);
       }
