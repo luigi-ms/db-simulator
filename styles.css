@@ -26,7 +26,9 @@ h1 {
 label{ 
   width: 75vw; 
   display: flex;
+  flex-direction: row-reverse;
   justify-content: space-between;
+  align-items: center;
 }
 
 input {
@@ -43,6 +45,11 @@ input:focus {
   border-bottom: 2px solid hsl(98, 32%, 45%);
 }
 
+input:focus + span {
+  font-weight: 600;
+  color: hsl(98, 32%, 45%);
+}
+
 fieldset {
   display: flex;
   gap: .75rem;
@@ -50,9 +57,14 @@ fieldset {
 }
 
 button {
-  width: 5rem;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  width: 5.25rem;
   height: 1.75rem;
   border-radius: 3px;
+  font-size: .78rem;
+  padding: 1rem;
 }
 
 button:active {
@@ -89,7 +101,7 @@ td { font-size: .9rem; }
 .entryForm {
   display: flex;
   flex-direction: column;
-  justify-content: center;
+  justify-content: space-evenly;
   align-items: center; 
   gap: .75rem;
 }
@@ -99,7 +111,7 @@ td { font-size: .9rem; }
   color: hsl(178, 87%, 67%);
 }
 
-.update-btn {
+.update-btn, .search-btn {
   border: 1px solid hsl(271, 85%, 23%);
   background-color: transparent;
   color: hsl(271, 85%, 23%);
@@ -108,4 +120,9 @@ td { font-size: .9rem; }
 .del-btn {
   background-color: transparent;
   color: hsl(271, 85%, 23%);
+}
+
+.focusedLabel {
+  color: hsl(98, 32%, 45%);
+  font-weight: 500;
 }
