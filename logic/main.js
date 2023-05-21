@@ -9,17 +9,22 @@ createApp({
         column: '',
         data: ''
       },
-      found: false,
       columns: Record.getColumns(),
       workingRecord: new Record(0),
       records: new RecordsList()
     };
   },
-  updated(){ this.workingRecord = new Record(0); },
+  updated(){ 
+    const dataCells = document.getElementsByTagName("td");
+    Array.from(dataCells).forEach(td => td.classList = []);
+
+    this.workingRecord = new Record(0);  //resets workingRecord every DOM update
+  },
   methods: {
     addData(){
       try{
-        const validatedID = this.validateID(this.entryForm.id);
+        const validatedID = this.validateID(true);
+        console.error(validatedID);
         const newRecord = new Record(validatedID);
         const mounted = this.mountWorkingRecord();
 
@@ -28,31 +33,29 @@ createApp({
 
         this.records.addRecord(newRecord);
       }catch(err){
-        alert(err.message);
+        alert("Cannot add because "+err.message);
       }
     },
     updateData(){
       try{
-        if(this.records.idExists(this.entryForm.id)){
-          const foundRecord = this.records.getRecordByID(this.entryForm.id);
-          const mounted = this.mountWorkingRecord();
-          const emptyCol = mounted.getEmptyCol();
+        const validatedID = this.validateID();
+        const foundRecord = this.records.getRecordByID(validatedID);
+        const mounted = this.mountWorkingRecord();
+        const emptyCol = mounted.getEmptyCol();
 
-          mounted.id = foundRecord.id;
-          mounted[emptyCol] = foundRecord[emptyCol];
+        mounted.id = foundRecord.id;
+        mounted[emptyCol] = foundRecord[emptyCol];
 
-          const recordIndex = this.records.getRecordIndex(foundRecord.id);
-          this.records.updateRecord(recordIndex, mounted);
-        }else { 
-          throw new Error(`ID '${this.entryForm.id}' does not exist`);
-        }
+        const recordIndex = this.records.getRecordIndex(foundRecord.id);
+        this.records.updateRecord(recordIndex, mounted);
       }catch(err){
         alert('Cannot update because '+err.message);
       }
     },
     searchData(){
       try{
-        const found = this.records.getRecord(this.entryForm.column, this.entryForm.data);
+        const validatedID = this.validateID();
+        const found = this.records.getRecord(validatedID);
         const element = document.querySelector(`#record${found.id}`);
 
         element.classList.add("foundRecord");
@@ -62,15 +65,12 @@ createApp({
     },
     removeData(){
       try{
-        if(this.records.idExists(this.entryForm.id)){
-          const foundRecord = this.records.getRecordByID(this.entryForm.id);
-          const recIndex = this.records.getRecordIndex(foundRecord.id);
+        const validatedID = this.validatedID();
+        const foundRecord = this.records.getRecordByID(validatedID);
+        const recIndex = this.records.getRecordIndex(foundRecord.id);
 
-          this.records.deleteRecord(recIndex);
-          alert(`Record removed`);
-        }else{
-          throw new Error(`ID '${this.entryForm.id}' does not exist`);
-        }
+        this.records.deleteRecord(recIndex);
+        alert(`Record removed`);
       }catch(err){
         alert('Cannot remove because '+err.message);
       }
@@ -95,12 +95,20 @@ createApp({
         throw new Error(`column '${column}' does not exist`);
       }
     },
-    validateID(id){
-      if(this.records.idExists(id)){ 
-        throw new Error(`ID '${id}' already exists`);
+    validateID(addingData=false){
+      if(addingData){
+        if(this.records.idExists(this.entryForm.id)){
+          throw new Error("ID already exists");
+        }else{
+          return this.entryForm.id;
+        }
       }else{
-        return id;
-      };
+        if(this.records.idExists(this.entryForm.id)){
+          return this.entryForm.id;
+        }else{
+          throw new Error("ID does not exist");
+        }
+      }
     }
   }
 }).mount('#db-simulator');

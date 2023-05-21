@@ -14,7 +14,7 @@
       <div class="entryForm"> 
         <label>
           <input 
-            v-model="entryForm.id" 
+            v-model.number="entryForm.id" 
             type="number" 
             id="IDInput" 
             placeholder="00" />
@@ -63,7 +63,9 @@
       
       <table>
         <tr>
-          <th v-for="(colName, index) in columns" :key="index">
+          <th
+            v-for="(colName, index) in columns"
+            :key="index">
             {{ colName }}
           </th>
         </tr>
@@ -74,9 +76,6 @@
         </tr>
       </table>
     </main>
-
-<!--    <script src="//cdn.jsdelivr.net/npm/eruda"></script>
-    <script>eruda.init();</script>
-    -->    <script type="module" src="./logic/main.js"></script>
+    <script type="module" src="./logic/main.js"></script>
   </body>
 </html>
