@@ -27,7 +27,7 @@
             type="text" 
             id="columnInput" 
             placeholder="name" />
-          <span>Column</span>
+          <span>Coluna</span>
         </label>
        
         <label>
@@ -42,19 +42,19 @@
         <fieldset class="buttons">
           <button @click="addData" class="add-btn">
             <i class="bi bi-file-earmark-plus"></i>
-            Adicionar
-          </button>
-          <button @click="updateData" class="update-btn">
-            <i class="bi bi-arrow-repeat"></i>
-            Atualizar
+            Create
           </button>
           <button @click="searchData" class="search-btn">
             <i class="bi bi-search"></i>
-            Procurar
+            Read
+          </button>
+          <button @click="updateData" class="update-btn">
+            <i class="bi bi-arrow-repeat"></i>
+            Update
           </button>
           <button @click="removeData" class="del-btn">
             <i class="bi bi-file-earmark-x"></i>
-            Remover
+            Delete
           </button>
         </fieldset>
       </div>
@@ -68,7 +68,7 @@
           </th>
         </tr>
         <tr v-for="entry in records.list" :key="entry.id">
-          <td class="recordID">{{ entry.id }}</td>
+          <td :id=`record${entry.id}`>{{ entry.id }}</td>
           <td>{{ entry.name }}</td>
           <td>{{ entry.age }}</td>
         </tr>

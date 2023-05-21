@@ -2,21 +2,23 @@ export class Record {
   constructor(id){
     this.id = id;
     this.name = '';
-    this.age = 0;
+    this._age = 0;
     this.updated = '';
   }
-
-  getUpdatedCol(){ return this.updated; }
 
   static getColumns(){ return ['id', 'name', 'age']; }
 
   getEmptyCol(){
     if(this.name === ''){
       return 'name';
-    }else if(this.age === 0){
+    }else if(this._age === 0){
       return 'age';
     }
   }
+
+  get age(){ return Number(this._age); }
+
+  set age(newAge){ this._age = Number(newAge); }
 }
 
 export class RecordsList {
@@ -32,8 +34,48 @@ export class RecordsList {
     }
   }
 
-  getRecord(recordID){
+  getRecord(column, data){
+    if(Record.getColumns().some(rec => rec === column)){
+      let result = {};
+
+      if(column === 'name'){
+        result = this.getRecordByName(data);
+      }else if(column === 'age'){
+        result = this.getRecordByAge(data);
+      }
+
+      if(result){
+        return result;
+      }else{
+        throw new Error("Record does not exist");
+      }        
+    }else{
+      throw new Error("Unexisting column")
+    }
+  }
+
+  getRecordByID(recordID){
     const result = this.list.filter(rec => rec.id === recordID)[0];
+
+    if(result){
+      return result;
+    }else{
+      throw new Error("Record does not exist");
+    }
+  }
+
+  getRecordByName(name){
+    const result = this.list.filter(rec => rec.name === name)[0];
+
+    if(result){
+      return result;
+    }else{
+      throw new Error("Record does not exist");
+    }
+  }
+  
+  getRecordByAge(age){
+    const result = this.list.filter(rec => rec.age === age)[0];
 
     if(result){
       return result;

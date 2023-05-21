@@ -9,6 +9,7 @@ createApp({
         column: '',
         data: ''
       },
+      found: false,
       columns: Record.getColumns(),
       workingRecord: new Record(0),
       records: new RecordsList()
@@ -33,7 +34,7 @@ createApp({
     updateData(){
       try{
         if(this.records.idExists(this.entryForm.id)){
-          const foundRecord = this.records.getRecord(this.entryForm.id);
+          const foundRecord = this.records.getRecordByID(this.entryForm.id);
           const mounted = this.mountWorkingRecord();
           const emptyCol = mounted.getEmptyCol();
 
@@ -49,10 +50,20 @@ createApp({
         alert('Cannot update because '+err.message);
       }
     },
+    searchData(){
+      try{
+        const found = this.records.getRecord(this.entryForm.column, this.entryForm.data);
+        const element = document.querySelector(`#record${found.id}`);
+
+        element.classList.add("foundRecord");
+      }catch(err){
+        alert("Could not find because "+err.message);
+      }
+    },
     removeData(){
       try{
         if(this.records.idExists(this.entryForm.id)){
-          const foundRecord = this.records.getRecord(this.entryForm.id);
+          const foundRecord = this.records.getRecordByID(this.entryForm.id);
           const recIndex = this.records.getRecordIndex(foundRecord.id);
 
           this.records.deleteRecord(recIndex);
