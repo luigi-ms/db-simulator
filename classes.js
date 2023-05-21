@@ -1,6 +1,6 @@
 export class Record {
   constructor(id){
-    this._id = id;
+    this.id = id;
     this.name = '';
     this.age = 0;
     this.updated = '';
@@ -8,7 +8,13 @@ export class Record {
 
   getUpdatedCol(){ return this.updated; }
 
-  get id(){ return this._id; }
+  getEmptyCol(){
+    if(this.name === ''){
+      return 'name';
+    }else if(this.age === 0){
+      return 'age';
+    }
+  }
 }
 
 export class RecordsList {

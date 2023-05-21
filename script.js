@@ -35,14 +35,15 @@ createApp({
     updateData(){
       try{
         if(this.records.idExists(this.entryForm.id)){
-          const updatedRecord = new Record(this.entryForm.id);
+          const foundRecord = this.records.getRecord(this.entryForm.id);
           const mounted = this.mountWorkingRecord();
+          const emptyCol = mounted.getEmptyCol();
 
-          updatedRecord.name = mounted.name;
-          updatedRecord.age = mounted.age;
+          mounted.id = foundRecord.id;
+          mounted[emptyCol] = foundRecord[emptyCol];
 
-          const oldRecordIndex = this.records.getRecordIndex(updatedRecord.id);
-          this.records.updateRecord(oldRecordIndex, updatedRecord);
+          const recordIndex = this.records.getRecordIndex(foundRecord.id);
+          this.records.updateRecord(recordIndex, mounted);
         }else { 
           throw new Error(`ID '${this.entryForm.id}' does not exist`);
         }
@@ -52,12 +53,12 @@ createApp({
     },
     mountWorkingRecord(){
       try{
+        if(this.entryForm.column === 'id') throw new Error('Cannot change the ID');
+
         const colName = this.validateColumn(this.entryForm.column);
  
-        this.workingRecord.updated = colName;
         this.workingRecord[colName] = this.entryForm.data;
 
-        console.log(this.workingRecord);
         return this.workingRecord;
       }catch(err){
         alert("Cannot mount record because "+err.message);
