@@ -2,7 +2,7 @@ export class Record {
   constructor(id){
     this.id = id;
     this.name = '';
-    this._age = 0;
+    this.age = 0;
   }
 
   static getColumns(){ return ['id', 'name', 'age']; }
@@ -10,14 +10,10 @@ export class Record {
   getEmptyCol(){
     if(this.name === ''){
       return 'name';
-    }else if(this._age === 0){
+    }else if(this.age === 0){
       return 'age';
     }
   }
-
-  get age(){ return Number(this._age); }
-
-  set age(newAge){ this._age = Number(newAge); }
 }
 
 export class RecordsList {
