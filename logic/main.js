@@ -14,6 +14,13 @@ createApp({
       records: new RecordsList()
     };
   },
+  created(){
+    if(!window.localStorage.getItem("records")){
+      this.records.updateStorage();
+    }else{
+      this.records.retrieveData(); 
+    }
+  },
   updated(){ 
     const dataCells = document.getElementsByTagName("td");
     Array.from(dataCells).forEach(td => td.classList = []);
@@ -87,10 +94,11 @@ createApp({
       }
     },
     validateColumn(column){
-      if(this.columns.some(col => col === column)){
-        return column;
+      const loweredCol = column.toLowerCase();
+      if(this.columns.some(col => col === loweredCol)){
+        return loweredCol;
       }else{
-        throw new Error(`column '${column}' does not exist`);
+        throw new Error(`column '${loweredCol}' does not exist`);
       }
     },
     validateID(addingData=false){

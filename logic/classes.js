@@ -3,7 +3,6 @@ export class Record {
     this.id = id;
     this.name = '';
     this._age = 0;
-    this.updated = '';
   }
 
   static getColumns(){ return ['id', 'name', 'age']; }
@@ -29,6 +28,7 @@ export class RecordsList {
   addRecord(rec){ 
     if(rec instanceof Record){
       this.list.push(rec);
+      this.updateStorage();
     }else{
       throw new Error('Not a Record instance');
     }
@@ -57,6 +57,7 @@ export class RecordsList {
   updateRecord(oldRecIndex, newRec){
     if(newRec instanceof Record){
       this.list.splice(oldRecIndex, 1, newRec);
+      this.updateStorage();
     }else{ 
       throw new Error('Not a Record instance');
     }
@@ -64,6 +65,15 @@ export class RecordsList {
 
   deleteRecord(recordIndex){
     this.list.splice(recordIndex, 1);
+    this.updateStorage();
+  }
+
+  updateStorage(){
+    window.localStorage.setItem("records", JSON.stringify(this.list));
+  }
+
+  retrieveData(){
+    this._recs = JSON.parse(window.localStorage.getItem("records"));
   }
 
   idExists(id){ return this.list.some(rec => rec.id === id); }
