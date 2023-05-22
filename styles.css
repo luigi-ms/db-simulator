@@ -38,28 +38,28 @@ input {
   border: 1px solid black;
   border-radius: 5px;
   background-color: transparent;
+  transition: border .15s ease;
 }
 
 input:focus {
   outline: none;
-  border: 1px solid hsl(98, 32%, 45%);
+  border-color: hsl(98, 32%, 45%);
+  transition: border .15s ease;
 }
 
 input + span {
-  font-size: .95rem;
+  font-size: .80rem;
   position: absolute;
   background-color: hsl(178, 87%, 85%);
   margin-inline: .15rem;
-  left: 7%; 
-  transition: font-size .15s linear, top .15s linear;
+  left: 7%;
+  transform: translate(0, -95%);
+  transition: color .15s ease;
 }
 
-input:focus + span,
-.notEmptyInput {
-  font-size: .65rem;
-  top: -20%;
-  color: hsl(98, 32%, 45%);
-  transition: font-size .15s linear, top .15s linear;
+input:focus + span { 
+  color: hsl(98, 32%, 45%); 
+  transition: color .15s ease;
 }
 
 fieldset {
@@ -73,13 +73,14 @@ button {
   justify-content: space-around;
   align-items: center;
   width: 5.25rem;
-  height: 1.75rem;
-  font-size: .78rem;
-  padding: 1rem;
-  border-radius: 5px;
+  height: 1.85rem;
+  font-size: .85rem;
+  padding: 1.25rem;
+  border-radius: 15px;
 }
 
-button:active {
+button:active,
+button:hover {
   background-color: hsl(98, 32%, 45%);
   color: hsl(178, 87%, 67%);
   border: none;
@@ -97,6 +98,7 @@ table {
   width: 65vw;
   margin-top: .75rem;
   font-family: 'Inconsolata', 'Courier New', Courier, monospace;
+  border: 1px solid black;
 }
 
 tr, td, th {

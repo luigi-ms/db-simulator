@@ -14,6 +14,15 @@ export class Record {
       return 'age';
     }
   }
+
+  static validateColumn(column){
+    const loweredCol = column.toLowerCase();
+    if(Record.getColumns().some(col => col === loweredCol)){
+        return loweredCol;
+    }else{
+        throw new Error(`column '${loweredCol}' does not exist`);
+    }
+  }
 }
 
 export class RecordsList {
@@ -70,6 +79,20 @@ export class RecordsList {
 
   retrieveData(){
     this._recs = JSON.parse(window.localStorage.getItem("records"));
+  }
+
+  validateID(id, addingData=false){
+    if(addingData){
+      if(this.idExists(id)){
+        throw new Error("ID already exists");
+      }
+    }else{
+      if(!this.idExists(id)){
+        throw new Error("ID does not exist");
+      }
+    }
+    
+    return id;
   }
 
   idExists(id){ return this.list.some(rec => rec.id === id); }
