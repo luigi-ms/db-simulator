@@ -24,30 +24,42 @@ h1 {
 }
 
 label{ 
-  width: 75vw; 
+  min-width: 75%; 
   display: flex;
-  flex-direction: row-reverse;
-  justify-content: space-between;
   align-items: center;
+  position: relative;
 }
 
 input {
   height: 1.6rem;
-  width: 16rem;
+  width: 100%;
+  padding: .95rem;
   margin-left: .75rem;
-  border: none;
-  border-bottom: 1px solid black;
+  border: 1px solid black;
+  border-radius: 5px;
   background-color: transparent;
 }
 
 input:focus {
   outline: none;
-  border-bottom: 2px solid hsl(98, 32%, 45%);
+  border: 1px solid hsl(98, 32%, 45%);
 }
 
-input:focus + span {
-  font-weight: 600;
+input + span {
+  font-size: .95rem;
+  position: absolute;
+  background-color: hsl(178, 87%, 85%);
+  margin-inline: .15rem;
+  left: 7%; 
+  transition: font-size .15s linear, top .15s linear;
+}
+
+input:focus + span,
+.notEmptyInput {
+  font-size: .65rem;
+  top: -20%;
   color: hsl(98, 32%, 45%);
+  transition: font-size .15s linear, top .15s linear;
 }
 
 fieldset {
@@ -62,9 +74,9 @@ button {
   align-items: center;
   width: 5.25rem;
   height: 1.75rem;
-  border-radius: 3px;
   font-size: .78rem;
   padding: 1rem;
+  border-radius: 5px;
 }
 
 button:active {

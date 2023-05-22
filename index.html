@@ -2,7 +2,8 @@
 <html lang="pt-br">
   <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Visual representation of basic DB operations">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
     <title>LocalStorage CRUD</title>
     <link rel="stylesheet" href="./styles.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
@@ -10,14 +11,13 @@
 
   <body>
     <main id="db-simulator">
-      <h1>Simulador de DB</h1>
+      <h1>DB Simulator</h1>
       <div class="entryForm"> 
         <label>
           <input 
             v-model.number="entryForm.id" 
             type="number" 
-            id="IDInput" 
-            placeholder="00" />
+            id="IDInput" />
           <span>ID</span>
         </label>
     
@@ -25,17 +25,15 @@
           <input 
             v-model="entryForm.column" 
             type="text" 
-            id="columnInput" 
-            placeholder="name" />
-          <span>Coluna</span>
+            id="columnInput" />
+          <span>Column</span>
         </label>
        
         <label>
           <input 
             v-model="entryForm.data"
             type="text" 
-            id="dataInput" 
-            placeholder="admin" />
+            id="dataInput" />
           <span>Data</span>
         </label>
    
@@ -77,6 +75,7 @@
       </table>
     </main>
 
+    <script src="./logic/scripts.js"></script>
     <script type="module" src="./logic/main.js"></script>
   </body>
 </html>
