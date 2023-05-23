@@ -76,12 +76,11 @@
         </tr>
       </table>
 
-      <p :class="(noUpdates) ? '' : 'table-updates'">{{ tableUpdates }}<p>
+      <p :class=`(noUpdates) ? '' : 'table-updates'`>{{ tableUpdates }}<p>
     </main>
     
     <script src="//cdn.jsdelivr.net/npm/eruda"></script>
     <script>eruda.init();</script>
-    <script src="./logic/scripts.js"></script>
     <script type="module" src="./logic/main.js"></script>
   </body>
 </html>

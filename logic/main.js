@@ -5,16 +5,15 @@ createApp({
   data(){
     return {
       entryForm: {
-        id: null,
-        column: null,
-        data: null
+        id: "",
+        column: "",
+        data: ""
       },
       messages: {
         idField: "",
         colField: ""
       },
       tableUpdates: "",
-      noUpdates: true,
       columns: Record.getColumns(),
       workingRecord: new Record(0),
       records: new RecordsList()
@@ -27,11 +26,22 @@ createApp({
       this.records.retrieveData(); 
     }
   },
-  updated(){ 
+  beforeUpdate(){
+    try{
+      this.validateForm();
+    }catch(err){
+      this.tableUpdates = err.message;
+      this.records = this.records;
+    }
+  },
+  updated(){
+    console.log(this.noUpdates);
     const dataCells = document.getElementsByTagName("td");
     Array.from(dataCells).forEach(td => td.classList = []);
-
-//    this.workingRecord = new Record(0);  //resets workingRecord every DOM update
+  },
+  mounted(){
+    this.workingRecord = new Record(0);
+    this.entryForm = { id: "", column: "", data: "" };
   },
   watch: {
     'entryForm.id'(newID){
@@ -56,9 +66,13 @@ createApp({
       this.workingRecord[this.workingRecord.updateCol] = newData;//this.setWorkingRecord(); 
     }
   },
+  computed: {
+    noUpdates(){
+      return this.tableUpdates === "";
+    }
+  },
   methods: {
     addData(){
-      this.noUpdates = true;
       try{
         const validatedID = this.records.validateID(this.entryForm.id, true);
         const newRecord = new Record(validatedID);
@@ -68,14 +82,11 @@ createApp({
         newRecord.age = wr.age;
 
         this.records.addRecord(newRecord);
-        console.log(newRecord);
       }catch(err){
-        this.noUpdates = false;
         this.tableUpdates = "Cannot add because "+err.message;
       }
     },
     updateData(){
-      this.noUpdates = true;
       try{
         const validatedID = this.records.validateID(this.workingRecord.id);
         const foundRecord = this.records.getRecord(validatedID);
@@ -88,12 +99,10 @@ createApp({
         const recordIndex = this.records.getRecordIndex(foundRecord.id);
         this.records.updateRecord(recordIndex, wr);
       }catch(err){
-        this.noUpdates = false;
         this.tableUpdates = 'Cannot update because '+err.message;
       }
     },
     searchData(){
-      this.noUpdates = true;
       try{
         const validatedID = this.records.validateID(this.workingRecord.id);
         const found = this.records.getRecord(validatedID);
@@ -101,12 +110,10 @@ createApp({
 
         element.classList.add("foundRecord");
       }catch(err){
-        this.noUpdates = false;
         this.tableUpdates = "Could not find because "+err.message;
       }
     },
     removeData(){
-      this.noUpdates = true;
       try{
         const validatedID = this.records.validateID(this.workingRecord.id);
         const foundRecord = this.records.getRecord(validatedID);
@@ -114,8 +121,16 @@ createApp({
 
         this.records.deleteRecord(recIndex);
       }catch(err){
-        this.noUpdates = false;
         this.tableUpdates = 'Cannot remove because '+err.message;
+      }
+    },
+    validateForm(){
+      const idEmpty = (this.entryForm.id === ""),
+            colEmpty = (this.entryForm.column === ""),
+            dataEmpty = (this.entryForm.data === "");
+
+      if(idEmpty || colEmpty || dataEmpty){
+        throw new Error("Form cannot be empty");
       }
     }
   }

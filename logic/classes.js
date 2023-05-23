@@ -85,11 +85,11 @@ export class RecordsList {
   validateID(id, addingData=false){
     if(addingData){
       if(this.idExists(id)){
-        throw new Error("ID already exists");
+        throw new Error(`ID ${id} already exists`);
       }
     }else{
       if(!this.idExists(id)){
-        throw new Error("ID does not exist");
+        throw new Error(`ID ${id} does not exist`);
       }
     }
     
