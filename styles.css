@@ -159,8 +159,16 @@ td { font-size: .9rem; }
   border-radius: 25px;
   font-size: .7rem;
   word-spacing: .15rem;
-  text-transform: uppercase;
   width: max-content;
   padding: 1rem;
   align-self: start;
+}
+
+.table-updated{
+  animation: fade-out 2s ease-out;
+}
+
+@keyframes fade-out {
+  from { opacity: 100%; }
+  to{ opacity: 0; }
 }

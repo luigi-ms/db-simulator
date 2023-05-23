@@ -20,7 +20,6 @@
             id="IDInput" />
           <span>ID</span>
         </label>
-        <p class="message">{{ messages.idField }}</p>
   
         <label>
           <input 
@@ -29,7 +28,6 @@
             id="columnInput" />
           <span>Column</span>
         </label>
-        <p class="message">{{ messages.colField }}</p>
         
         <label>
           <input 
@@ -38,6 +36,7 @@
             id="dataInput" />
           <span>Data</span>
         </label>
+        <p class="message">{{ messageError }}</p>
 
         <fieldset class="buttons">
           <button @click="addData" class="add-btn">
@@ -76,7 +75,7 @@
         </tr>
       </table>
 
-      <p :class=`(noUpdates) ? '' : 'table-updates'`>{{ tableUpdates }}<p>
+      <p v-show="tableUpdates !== ''" class="table-updates">{{ tableUpdates }}<p>
     </main>
     
     <script src="//cdn.jsdelivr.net/npm/eruda"></script>

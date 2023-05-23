@@ -9,10 +9,7 @@ createApp({
         column: "",
         data: ""
       },
-      messages: {
-        idField: "",
-        colField: ""
-      },
+      messageError: "",
       tableUpdates: "",
       columns: Record.getColumns(),
       workingRecord: new Record(0),
@@ -26,69 +23,66 @@ createApp({
       this.records.retrieveData(); 
     }
   },
+  mounted(){
+    this.entryForm = { id: "", column: "", data: "" };
+    this.tableUpdates = "Table ready";
+  },
   beforeUpdate(){
     try{
-      this.validateForm();
+      this.workingRecord = new Record(0);
     }catch(err){
       this.tableUpdates = err.message;
       this.records = this.records;
     }
   },
   updated(){
-    console.log(this.noUpdates);
     const dataCells = document.getElementsByTagName("td");
     Array.from(dataCells).forEach(td => td.classList = []);
   },
-  mounted(){
-    this.workingRecord = new Record(0);
-    this.entryForm = { id: "", column: "", data: "" };
-  },
   watch: {
-    'entryForm.id'(newID){
-      try{
-        this.workingRecord.id = this.records.validateID(newID);
-        this.messages.idField = "";
-      }catch(err){
-        this.messages.idField = err.message;
-      }
-    },
-    'entryForm.column'(newColumn){
-      try{
-        if(newColumn === 'id') throw new Error('Cannot change id column');
+    entryForm: {
+      handler(){
+        try{
+          this.validateForm();
+          if(this.entryForm.column === 'id') throw new Error('Cannot change id column');
 
-        this.workingRecord.updateCol = Record.validateColumn(newColumn);
-        this.messages.colField = "";
-      }catch(err){
-        this.messages.colField = err.message;
-      }
-    },
-    'entryForm.data'(newData){
-      this.workingRecord[this.workingRecord.updateCol] = newData;//this.setWorkingRecord(); 
-    }
-  },
-  computed: {
-    noUpdates(){
-      return this.tableUpdates === "";
+          this.workingRecord.id = this.records.validateID(this.entryForm.id);
+
+          this.workingRecord.updateCol = Record.validateColumn(this.entryForm.column);
+          
+          this.workingRecord[this.workingRecord.updateCol] = newData;//this.setWorkingRecord(); 
+
+          this.messageError = "";
+        }catch(err){
+          this.messageError = err.message;
+        }
+      },
+      deep: true
     }
   },
   methods: {
     addData(){
       try{
+        this.validateForm();
         const validatedID = this.records.validateID(this.entryForm.id, true);
         const newRecord = new Record(validatedID);
         const wr = this.workingRecord;
 
+        console.log(wr);
         newRecord.name = wr.name;
         newRecord.age = wr.age;
 
         this.records.addRecord(newRecord);
+        
+        this.tableUpdates = "New record added";
       }catch(err){
-        this.tableUpdates = "Cannot add because "+err.message;
+        this.tableUpdates = `InsertError ${err.message}`;
       }
     },
     updateData(){
       try{
-        const validatedID = this.records.validateID(this.workingRecord.id);
+        this.validateForm();
+        const validatedID = this.records.validateID(this.entryForm.id);
         const foundRecord = this.records.getRecord(validatedID);
         const wr = this.workingRecord;
         const emptyCol = wr.getEmptyCol();
@@ -98,30 +92,36 @@ createApp({
 
         const recordIndex = this.records.getRecordIndex(foundRecord.id);
         this.records.updateRecord(recordIndex, wr);
+
+        this.tableUpdates = `Record ${wr.id} updated`;
       }catch(err){
-        this.tableUpdates = 'Cannot update because '+err.message;
+        this.tableUpdates = `UpdateError: ${err.message}`;
       }
     },
     searchData(){
       try{
-        const validatedID = this.records.validateID(this.workingRecord.id);
+        const validatedID = this.records.validateID(this.entryForm.id);
         const found = this.records.getRecord(validatedID);
         const element = document.querySelector(`#record${found.id}`);
 
         element.classList.add("foundRecord");
+
+        this.tableUpdates = "Record found";
       }catch(err){
-        this.tableUpdates = "Could not find because "+err.message;
+        this.tableUpdates = `SelectError: ${err.message}`;
       }
     },
     removeData(){
       try{
-        const validatedID = this.records.validateID(this.workingRecord.id);
+        const validatedID = this.records.validateID(this.entryForm.id);
         const foundRecord = this.records.getRecord(validatedID);
         const recIndex = this.records.getRecordIndex(foundRecord.id);
 
         this.records.deleteRecord(recIndex);
+
+        this.tableUpdates = `Record ${validatedID} removed`;
       }catch(err){
-        this.tableUpdates = 'Cannot remove because '+err.message;
+        this.tableUpdates = `RemoveError: ${err.message}`;
       }
     },
     validateForm(){
