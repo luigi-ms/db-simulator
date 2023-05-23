@@ -75,6 +75,8 @@
           <td>{{ entry.age }}</td>
         </tr>
       </table>
+
+      <p :class="(noUpdates) ? '' : 'table-updates'">{{ tableUpdates }}<p>
     </main>
     
     <script src="//cdn.jsdelivr.net/npm/eruda"></script>
