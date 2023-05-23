@@ -1,8 +1,9 @@
 export class Record {
   constructor(id){
     this.id = id;
-    this.name = '';
+    this.name = 'fulano';
     this.age = 0;
+    this.updateCol = "";
   }
 
   static getColumns(){ return ['id', 'name', 'age']; }

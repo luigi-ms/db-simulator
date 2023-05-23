@@ -9,6 +9,10 @@ createApp({
         column: null,
         data: null
       },
+      messages: {
+        idField: "",
+        colField: ""
+      },
       columns: Record.getColumns(),
       workingRecord: new Record(0),
       records: new RecordsList()
@@ -28,8 +32,29 @@ createApp({
     this.workingRecord = new Record(0);  //resets workingRecord every DOM update
   },
   watch: {
-    'entryForm.data'(){
-      this.workingRecord = this.setWorkingRecord(); 
+    'entryForm.id'(newID){
+      try{
+        this.workingRecord.id = this.records.validateID(newID);
+        console.log(this.workingRecord.id);
+        this.messages.idField = "";
+      }catch(err){
+        this.messages.idField = err.message;
+      }
+    },
+    'entryForm.column'(newColumn){
+      try{
+        if(newColumn === 'id') throw new Error('Cannot change id column');
+
+        this.workingRecord.updateCol = Record.validateColumn(newColumn);
+        console.log(this.workingRecord.updateCol);
+        this.messages.colField = "";
+      }catch(err){
+        this.messages.colField = err.message;
+      }
+    },
+    'entryForm.data'(newData){
+      this.workingRecord[this.workingRecord.updateCol] = newData;//this.setWorkingRecord(); 
+      console.log(this.workingRecord);
     }
   },
   methods: {
@@ -83,19 +108,6 @@ createApp({
         this.records.deleteRecord(recIndex);
       }catch(err){
         alert('Cannot remove because '+err.message);
-      }
-    },
-    setWorkingRecord(){
-      try{
-        if(this.entryForm.column === 'id') throw new Error('Cannot change the ID');
-
-        const colName = Record.validateColumn(this.entryForm.column);
-        const record = new Record(this.entryForm.id);
-
-        record[colName] = this.entryForm.data;
-        return record;
-      }catch(err){
-        alert("Cannot mount record because "+err.message);
       }
     }
   }

@@ -20,6 +20,7 @@
             id="IDInput" />
           <span>ID</span>
         </label>
+        <p class="message">{{ messages.idField }}</p>
   
         <label>
           <input 
@@ -28,7 +29,8 @@
             id="columnInput" />
           <span>Column</span>
         </label>
-       
+        <p class="message">{{ messages.colField }}</p>
+        
         <label>
           <input 
             v-model="entryForm.data"
@@ -36,7 +38,7 @@
             id="dataInput" />
           <span>Data</span>
         </label>
-   
+
         <fieldset class="buttons">
           <button @click="addData" class="add-btn">
             <i class="bi bi-file-earmark-plus"></i>

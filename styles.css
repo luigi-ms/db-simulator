@@ -79,8 +79,7 @@ button {
   border-radius: 15px;
 }
 
-button:active,
-button:hover {
+button:active {
   background-color: hsl(98, 32%, 45%);
   color: hsl(178, 87%, 67%);
   border: none;
@@ -99,10 +98,14 @@ table {
   margin-top: .75rem;
   font-family: 'Inconsolata', 'Courier New', Courier, monospace;
   border: 1px solid black;
+  border-radius: 3px;
 }
 
-tr, td, th {
-  border: 0.75px solid black;
+th {
+  border-bottom: 0.75px solid black;
+}
+
+td, th {
   text-align: center;
   padding: .25rem;
 }
@@ -138,4 +141,13 @@ td { font-size: .9rem; }
 .foundRecord {
   background-color: hsl(98, 32%, 45%);
   color: hsl(178, 87%, 67%);
+}
+
+.message {
+  color: red;
+  font-size: .7rem;
+  width: 73%;
+  display: flex;
+  align-content: start;
+  margin-left: .75rem;
 }
