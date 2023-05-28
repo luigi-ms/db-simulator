@@ -1,6 +1,8 @@
 import { createApp } from "https://cdn.jsdelivr.net/npm/vue@3.3.4/dist/vue.esm-browser.prod.js";
 import { Record, RecordsList } from "./classes.js";
 
+let store = new Record(0);
+
 createApp({
   data(){
     return {
@@ -10,9 +12,7 @@ createApp({
         data: ""
       },
       messageError: "",
-      tableUpdates: "",
       columns: Record.getColumns(),
-      workingRecord: new Record(0),
       records: new RecordsList()
     };
   },
@@ -25,39 +25,33 @@ createApp({
   },
   mounted(){
     this.entryForm = { id: "", column: "", data: "" };
-    this.tableUpdates = "Table ready";
-  },
-  beforeUpdate(){
-    try{
-      this.workingRecord = new Record(0);
-    }catch(err){
-      this.tableUpdates = err.message;
-      this.records = this.records;
-    }
   },
   updated(){
     const dataCells = document.getElementsByTagName("td");
     Array.from(dataCells).forEach(td => td.classList = []);
   },
   watch: {
-    entryForm: {
-      handler(){
-        try{
-          this.validateForm();
-          if(this.entryForm.column === 'id') throw new Error('Cannot change id column');
-
-          this.workingRecord.id = this.records.validateID(this.entryForm.id);
-
-          this.workingRecord.updateCol = Record.validateColumn(this.entryForm.column);
-          
-          this.workingRecord[this.workingRecord.updateCol] = newData;//this.setWorkingRecord(); 
-
-          this.messageError = "";
-        }catch(err){
-          this.messageError = err.message;
-        }
-      },
-      deep: true
+    'entryForm.id'(){
+      try{
+        this.records.validateID(this.entryForm.id);
+      }catch(err){
+        this.messageError = err.message;
+      }finally{
+        store.id = this.entryForm.id;
+      }
+    },
+    'entryForm.column'(){
+      try{
+        if(this.entryForm.column === 'id') throw new Error('Cannot change id column');
+        store.updateCol = Record.validateColumn(this.entryForm.column);
+        this.messageError = "";
+      }catch(err){
+        this.messageError = err.message;
+      }
+    },
+    'entryForm.data'(){
+      store[store.updateCol] = this.entryForm.data;
+      console.log(store);
     }
   },
   methods: {
@@ -66,17 +60,13 @@ createApp({
         this.validateForm();
         const validatedID = this.records.validateID(this.entryForm.id, true);
         const newRecord = new Record(validatedID);
-        const wr = this.workingRecord;
-
-        console.log(wr);
-        newRecord.name = wr.name;
-        newRecord.age = wr.age;
-
-        this.records.addRecord(newRecord);
         
-        this.tableUpdates = "New record added";
+        newRecord.name = store.name;
+        newRecord.age = store.age;
+
+        this.records.addRecord(newRecord);        
       }catch(err){
-        this.tableUpdates = `InsertError ${err.message}`;
+        console.error(`InsertError ${err.message}`);
       }
     },
     updateData(){
@@ -84,18 +74,15 @@ createApp({
         this.validateForm();
         const validatedID = this.records.validateID(this.entryForm.id);
         const foundRecord = this.records.getRecord(validatedID);
-        const wr = this.workingRecord;
-        const emptyCol = wr.getEmptyCol();
+        const emptyCol = store.getEmptyCol();
 
-        wr.id = foundRecord.id;
-        wr[emptyCol] = foundRecord[emptyCol];
+        store.id = foundRecord.id;
+        store[emptyCol] = foundRecord[emptyCol];
 
         const recordIndex = this.records.getRecordIndex(foundRecord.id);
-        this.records.updateRecord(recordIndex, wr);
-
-        this.tableUpdates = `Record ${wr.id} updated`;
+        this.records.updateRecord(recordIndex, store);
       }catch(err){
-        this.tableUpdates = `UpdateError: ${err.message}`;
+        console.error(`UpdateError: ${err.message}`);
       }
     },
     searchData(){
@@ -105,10 +92,8 @@ createApp({
         const element = document.querySelector(`#record${found.id}`);
 
         element.classList.add("foundRecord");
-
-        this.tableUpdates = "Record found";
       }catch(err){
-        this.tableUpdates = `SelectError: ${err.message}`;
+        console.error(`SelectError: ${err.message}`);
       }
     },
     removeData(){
@@ -118,10 +103,8 @@ createApp({
         const recIndex = this.records.getRecordIndex(foundRecord.id);
 
         this.records.deleteRecord(recIndex);
-
-        this.tableUpdates = `Record ${validatedID} removed`;
       }catch(err){
-        this.tableUpdates = `RemoveError: ${err.message}`;
+        console.error(`RemoveError: ${err.message}`);
       }
     },
     validateForm(){
@@ -129,7 +112,7 @@ createApp({
             colEmpty = (this.entryForm.column === ""),
             dataEmpty = (this.entryForm.data === "");
 
-      if(idEmpty || colEmpty || dataEmpty){
+      if(idEmpty && colEmpty && dataEmpty){
         throw new Error("Form cannot be empty");
       }
     }

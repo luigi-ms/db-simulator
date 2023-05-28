@@ -151,24 +151,3 @@ td { font-size: .9rem; }
   align-content: start;
   margin-left: .75rem;
 }
-
-.table-updates {
-  position: absolute;
-  bottom: 5%;
-  border: 1.5px solid hsl(98, 32%, 45%);
-  border-radius: 25px;
-  font-size: .7rem;
-  word-spacing: .15rem;
-  width: max-content;
-  padding: 1rem;
-  align-self: start;
-}
-
-.table-updated{
-  animation: fade-out 2s ease-out;
-}
-
-@keyframes fade-out {
-  from { opacity: 100%; }
-  to{ opacity: 0; }
-}

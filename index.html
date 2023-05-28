@@ -15,9 +15,10 @@
       <div class="entryForm"> 
         <label>
           <input 
-            v-model.number="entryForm.id" 
+            v-model="entryForm.id" 
             type="number" 
-            id="IDInput" />
+            id="IDInput" 
+            placeholder="0"/>
           <span>ID</span>
         </label>
   
@@ -25,7 +26,8 @@
           <input 
             v-model="entryForm.column" 
             type="text" 
-            id="columnInput" />
+            id="columnInput" 
+            placeholder="name"/>
           <span>Column</span>
         </label>
         
@@ -33,7 +35,8 @@
           <input 
             v-model="entryForm.data"
             type="text" 
-            id="dataInput" />
+            id="dataInput" 
+            placeholder="admin"/>
           <span>Data</span>
         </label>
         <p class="message">{{ messageError }}</p>
@@ -74,8 +77,6 @@
           <td>{{ entry.age }}</td>
         </tr>
       </table>
-
-      <p v-show="tableUpdates !== ''" class="table-updates">{{ tableUpdates }}<p>
     </main>
     
     <script src="//cdn.jsdelivr.net/npm/eruda"></script>
