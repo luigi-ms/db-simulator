@@ -1,8 +1,8 @@
 export class Record {
   constructor(id){
-    this.id = id;
     this.name = 'fulano';
     this.age = 0;
+    this.id = id;
     this.updateCol = "";
   }
 
@@ -28,67 +28,67 @@ export class Record {
 
 export class RecordsList {
   constructor(){
-    this._recs = [];
+    this._recs = new Map();
+    this._ids = new Set();
   }
 
-  addRecord(rec){ 
-    if(rec instanceof Record){
-      this.list.push(rec);
+  create(newID, newRec){
+    try{
+      this.validateID(newID, true);
+      this._recs.set(newID, newRec);
+      this._ids.add(newID);
       this.updateStorage();
-    }else{
-      throw new Error('Not a Record instance');
+    }catch(err){
+      throw new Error(err.message);
     }
   }
 
-  getRecord(recordID){
-    const result = this.list.filter(rec => rec.id === recordID)[0];
-
-    if(result){
-      return result;
-    }else{
-      throw new Error("Record does not exist");
+  read(recordID){
+    try{
+      this.validateID(recordID);
+      return this._recs.get(recordID);
+    }catch(err){
+      throw new Error(err.message);
     }
   }
 
-  getRecordIndex(recordID){
-    const index = this.list.findIndex(rec => rec.id === recordID);
-
-    if(index >= 0){
-      return index;
-    }else{
-      throw new Error("Record index does not exist");
-    }
-  }
-
-  updateRecord(oldRecIndex, newRec){
-    if(newRec instanceof Record){
-      this.list.splice(oldRecIndex, 1, newRec);
+  update(recordID, newRec){
+    try{
+      this.validateID(recordID);
+      this._recs.set(recordID, newRec);
       this.updateStorage();
-    }else{ 
-      throw new Error('Not a Record instance');
-    }
+    }catch(err){
+      throw new Error(err.message);
+    } 
   }
 
-  deleteRecord(recordIndex){
-    this.list.splice(recordIndex, 1);
-    this.updateStorage();
+  deleteRecord(recordID){
+    try{
+      this.validateID(recordID);
+      this._recs.delete(recordID);
+      this.updateStorage();
+    }catch(err){
+      throw new Error(err.message);
+    }
   }
 
   updateStorage(){
-    window.localStorage.setItem("records", JSON.stringify(this.list));
+    window.localStorage.setItem("records", JSON.stringify(Object.fromEntries(this._recs)));
   }
 
   retrieveData(){
-    this._recs = JSON.parse(window.localStorage.getItem("records"));
+    let db = window.localStorage.getItem("records");
+    this._recs = new Map(Object.entries(JSON.parse(db)).map(it => it));
   }
 
   validateID(id, addingData=false){
+    
     if(addingData){
-      if(this.idExists(id)){
+      if(this._ids.has(id)){
         throw new Error(`ID ${id} already exists`);
       }
     }else{
-      if(!this.idExists(id)){
+      if(!this._ids.has(id)){
         throw new Error(`ID ${id} does not exist`);
       }
     }
@@ -96,7 +96,7 @@ export class RecordsList {
     return id;
   }
 
-  idExists(id){ return this.list.some(rec => rec.id === id); }
-
-  get list(){ return this._recs; }
+  get list(){
+    return Array.from(this._recs.values());
+  }
 }

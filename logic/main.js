@@ -51,44 +51,36 @@ createApp({
     },
     'entryForm.data'(){
       store[store.updateCol] = this.entryForm.data;
-      console.log(store);
     }
   },
   methods: {
     addData(){
       try{
         this.validateForm();
-        const validatedID = this.records.validateID(this.entryForm.id, true);
-        const newRecord = new Record(validatedID);
+        const newRecord = new Record(store.id);
         
         newRecord.name = store.name;
         newRecord.age = store.age;
 
-        this.records.addRecord(newRecord);        
+        console.info(newRecord);
+        this.records.create(store.id, newRecord);        
       }catch(err){
         console.error(`InsertError ${err.message}`);
+      }finally{
+        store = new Record(0);
       }
     },
     updateData(){
       try{
         this.validateForm();
-        const validatedID = this.records.validateID(this.entryForm.id);
-        const foundRecord = this.records.getRecord(validatedID);
-        const emptyCol = store.getEmptyCol();
-
-        store.id = foundRecord.id;
-        store[emptyCol] = foundRecord[emptyCol];
-
-        const recordIndex = this.records.getRecordIndex(foundRecord.id);
-        this.records.updateRecord(recordIndex, store);
+        this.records.update(recordIndex, store);
       }catch(err){
         console.error(`UpdateError: ${err.message}`);
       }
     },
     searchData(){
       try{
-        const validatedID = this.records.validateID(this.entryForm.id);
-        const found = this.records.getRecord(validatedID);
+        const found = this.records.read(store.id);
         const element = document.querySelector(`#record${found.id}`);
 
         element.classList.add("foundRecord");
@@ -98,11 +90,7 @@ createApp({
     },
     removeData(){
       try{
-        const validatedID = this.records.validateID(this.entryForm.id);
-        const foundRecord = this.records.getRecord(validatedID);
-        const recIndex = this.records.getRecordIndex(foundRecord.id);
-
-        this.records.deleteRecord(recIndex);
+        this.records.deleteRecord(store.id);
       }catch(err){
         console.error(`RemoveError: ${err.message}`);
       }
