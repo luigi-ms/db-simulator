@@ -1,5 +1,6 @@
 import { createApp } from "https://cdn.jsdelivr.net/npm/vue@3.3.4/dist/vue.esm-browser.prod.js";
-import { Record, RecordsList } from "./classes.js";
+import RecordsMap from "./RecordsMap.js";
+import Record from "./Record.js";
 
 let store = new Record(0);
 
@@ -13,11 +14,11 @@ createApp({
       },
       messageError: "",
       columns: Record.getColumns(),
-      records: new RecordsList()
+      records: new RecordsMap()
     };
   },
   created(){
-    if(!window.localStorage.getItem("records")){
+    if(!window.localStorage.getItem("records") || !window.localStorage.getItem("ids")){
       this.records.updateStorage();
     }else{
       this.records.retrieveData(); 

@@ -1,32 +1,4 @@
-export class Record {
-  constructor(id){
-    this.name = 'fulano';
-    this.age = 0;
-    this.id = id;
-    this.updateCol = "";
-  }
-
-  static getColumns(){ return ['id', 'name', 'age']; }
-
-  getEmptyCol(){
-    if(this.name === ''){
-      return 'name';
-    }else if(this.age === 0){
-      return 'age';
-    }
-  }
-
-  static validateColumn(column){
-    const loweredCol = column.toLowerCase();
-    if(Record.getColumns().some(col => col === loweredCol)){
-        return loweredCol;
-    }else{
-        throw new Error(`column '${loweredCol}' does not exist`);
-    }
-  }
-}
-
-export class RecordsList {
+export default class RecordsMap {
   constructor(){
     this._recs = new Map();
     this._ids = new Set();
@@ -74,11 +46,15 @@ export class RecordsList {
 
   updateStorage(){
     window.localStorage.setItem("records", JSON.stringify(Object.fromEntries(this._recs)));
+    window.localStorage.setItem("ids", JSON.stringify(Object.fromEntries(this._ids)));
   }
 
   retrieveData(){
     let db = window.localStorage.getItem("records");
+    let ids = window.localStorage.getItem("ids");
+
     this._recs = new Map(Object.entries(JSON.parse(db)).map(it => it));
+    this._ids = new Map(Object.entries(JSON.parse(ids)).map(it => it));
   }
 
   validateID(id, addingData=false){
