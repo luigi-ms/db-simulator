@@ -10,9 +10,9 @@
   </head>
 
   <body>
-    <main id="db-simulator">
+    <main>
       <h1>DB Simulator</h1>
-      <div class="entryForm"> 
+      <div id="input-form" class="entryForm"> 
         <label>
           <input 
             v-model="entryForm.id" 
@@ -63,7 +63,7 @@
 
       <hr/>
       
-      <table>
+      <table id="data-list">
         <tr>
           <th
             v-for="(colName, index) in columns"
