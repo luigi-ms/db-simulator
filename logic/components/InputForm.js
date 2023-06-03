@@ -1,5 +1,5 @@
-import Record from "./Record.js";
-import { actualRecord, recordsMap } from "./stores.js";
+import Record from "../classes/Record.js";
+import { actualRecord, recordsMap } from "../stores.js";
 
 export default {
   data(){
@@ -51,10 +51,10 @@ export default {
         newRecord.name = actualRecord.name;
         newRecord.age = actualRecord.age;
 
-        console.info(newRecord);
         recordsMap.create(actualRecord.id, newRecord);        
       }catch(err){
         console.error(`InsertError ${err.message}`);
+        console.trace();
       }finally{
         actualRecord = new Record(0);
       }

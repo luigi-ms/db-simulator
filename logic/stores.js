@@ -1,5 +1,5 @@
-import Record from "./Record.js";
-import RecordsMap from "./RecordsMap.js";
+import Record from "./classes/Record.js";
+import RecordsMap from "./classes/RecordsMap.js";
 
 let actualRecord = new Record(0);
 const recordsMap = new RecordsMap();

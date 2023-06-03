@@ -12,6 +12,9 @@ export default class RecordsMap {
       this.updateStorage();
     }catch(err){
       throw new Error(err.message);
+    }finally{
+      console.info(this._ids);
+      console.info(this._recs);
     }
   }
 
@@ -45,6 +48,8 @@ export default class RecordsMap {
   }
 
   updateStorage(){
+
+
     window.localStorage.setItem("records", JSON.stringify(Object.fromEntries(this._recs)));
     window.localStorage.setItem("ids", JSON.stringify(Object.fromEntries(this._ids)));
   }
@@ -54,11 +59,10 @@ export default class RecordsMap {
     let ids = window.localStorage.getItem("ids");
 
     this._recs = new Map(Object.entries(JSON.parse(db)).map(it => it));
-    this._ids = new Map(Object.entries(JSON.parse(ids)).map(it => it));
+    this._ids = new Set(Object.entries(JSON.parse(ids)).map(it => it));
   }
 
-  validateID(id, addingData=false){
-    
+  validateID(id, addingData=false){ 
     if(addingData){
       if(this._ids.has(id)){
         throw new Error(`ID ${id} already exists`);
