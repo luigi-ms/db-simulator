@@ -66,10 +66,56 @@ export default {
     },
   },
   methods: {
-    add() {},
-    read() {},
-    update() {},
-    remove() {},
+    add() {
+      try {
+        this.validateForm();
+        const newRecord = new Record(this.actual.id);
+
+        newRecord.name = this.actual.name;
+        newRecord.age = this.actual.age;
+
+        console.info(newRecord);
+        this.recs.create(this.actual.id, newRecord);
+      } catch (err) {
+        console.error(`InsertError ${err.message}`);
+      } finally {
+        this.actual = new Record(0);
+      }
+    },
+    read() {
+      try {
+        const found = this.recs.read(this.actual.id);
+        const element = document.querySelector(`#record${found.id}`);
+
+        element.classList.add("foundRecord");
+      } catch (err) {
+        console.error(`SelectError: ${err.message}`);
+      }
+    },
+    update() {
+      try {
+        this.validateForm();
+        this.recs.update(recordIndex, this.actual);
+      } catch (err) {
+        console.error(`UpdateError: ${err.message}`);
+      }
+    },
+    remove() {
+      try {
+        this.recs.deleteRecord(this.actual.id);
+      } catch (err) {
+        console.error(`RemoveError: ${err.message}`);
+      }
+    },
+    validateForm() {
+      const idEmpty = this.entryForm.id === "",
+        colEmpty = this.entryForm.column === "",
+        dataEmpty = this.entryForm.data === "";
+
+      if (idEmpty && colEmpty && dataEmpty) {
+        throw new Error("Form cannot be empty");
+      }
+    },
   },
 };
 </script>
